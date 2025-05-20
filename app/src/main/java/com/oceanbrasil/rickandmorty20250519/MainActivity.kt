@@ -9,10 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.oceanbrasil.rickandmorty20250519.ui.theme.RickAndMorty20250519Theme
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
 data class CharacterResponse(
@@ -32,25 +34,31 @@ interface RickAndMortyApi {
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val retrofit = Retrofit.Builder()
-            .baseUrl("https://rickandmortyapi.com/api/")
-            .build()
-
-        val service = retrofit.create(RickAndMortyApi::class.java)
-        //service.getCharacters()
-
-
         enableEdgeToEdge()
         setContent {
             RickAndMorty20250519Theme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    ListaDePersonagens(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
             }
         }
+    }
+}
+
+@Composable
+fun ListaDePersonagens( modifier: Modifier = Modifier) {
+    val retrofit = Retrofit.Builder()
+        .baseUrl("https://rickandmortyapi.com/api/")
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val service = retrofit.create(RickAndMortyApi::class.java)
+    //service.getCharacters()
+    LaunchedEffect(Unit) {
+//        service.getCharacters().enqueue(object: CallBack)
+
     }
 }
 
